@@ -10,6 +10,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.lang.reflect.Type;
 
+@GsonAdapter(Component.class)
 public class ComponentAdapter implements JsonSerializer<Component>, JsonDeserializer<Component> {
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacySection();
 

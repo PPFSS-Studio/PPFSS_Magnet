@@ -10,6 +10,7 @@ import com.ppfss.libs.config.YamlConfig;
 import com.ppfss.libs.config.YamlConfigLoader;
 import com.ppfss.libs.message.Message;
 import com.ppfss.magnet.model.DefaultItemData;
+import com.ppfss.magnet.model.FilterData;
 import com.ppfss.magnet.model.ParticleData;
 import com.ppfss.magnet.model.TasksSettings;
 import lombok.AllArgsConstructor;
@@ -56,6 +57,9 @@ public class Config extends YamlConfig {
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWJhOGViYzRjNmE4MTczMDk0NzQ5OWJmN2UxZDVlNzNmZWQ2YzFiYjJjMDUxZTk2ZDM1ZWIxNmQyNDYxMGU3In19fQ=="
 
     );
+
+    @SerializedName("filter-items")
+    FilterData filterData = new FilterData();
 
     public static void load(YamlConfigLoader configLoader) {
         instance = configLoader.loadConfig("config", Config.class);

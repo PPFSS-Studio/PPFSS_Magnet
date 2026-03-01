@@ -54,9 +54,7 @@ public abstract class AbstractCommand extends Command {
             if (subCommand != null) {
                 String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
 
-                String permission = subCommand.getPermission(sender, this, commandLabel, subArgs);
-
-                if (permission != null && !sender.hasPermission(permission)) {
+                if (!subCommand.hasPermission(sender, this, "", subArgs)) {
                     subCommand.noPermission(sender, this, commandLabel, subArgs);
                     return true;
                 }
@@ -69,8 +67,7 @@ public abstract class AbstractCommand extends Command {
         return true;
     }
 
-    protected void handle(CommandSender sender, Command command, String commandLabel, String[] args) {
-    }
+    protected void handle(CommandSender sender, Command command, String commandLabel, String[] args) {}
 
     private List<String> filter(List<String> strings, String... args) {
         if (strings == null || strings.isEmpty()) return new ArrayList<>();
@@ -92,9 +89,7 @@ public abstract class AbstractCommand extends Command {
                 String name = entry.getKey();
                 String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
 
-                String permission = subCommand.getPermission(sender, this, label, subArgs);
-
-                if (permission != null && !sender.hasPermission(permission)) {
+                if (!subCommand.hasPermission(sender, this, label, subArgs)) {
                     continue;
                 }
                 result.add(name);

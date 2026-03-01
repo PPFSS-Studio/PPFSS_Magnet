@@ -9,6 +9,7 @@ import org.bukkit.Material;
 
 import java.lang.reflect.Type;
 
+@GsonAdapter(Material.class)
 public class MaterialAdapter implements JsonSerializer<Material>, JsonDeserializer<Material> {
 
     @Override

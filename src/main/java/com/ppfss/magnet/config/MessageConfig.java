@@ -1,4 +1,4 @@
-// PPFSS_Magnet Plugin 
+// PPFSS_Magnet Plugin
 // Авторские права (c) 2025 PPFSS
 // Лицензия: MIT
 
@@ -46,6 +46,52 @@ public class MessageConfig extends YamlConfig {
 
     @SerializedName("plugin-reload-usage")
     Message pluginReloadUsage = new Message("<yellow>/magnet reload <white>- перезагружает конфиги");
+
+    @SerializedName("filter-usage")
+    Message filterUsage = new Message(
+            "<yellow>/magnet filter enable|disable|status <white>- управление фильтром",
+            "<yellow>/magnet filter add [Материал] <white>- добавить предмет в фильтр",
+            "<yellow>/magnet filter remove <Материал> <white>- удалить предмет из фильтра",
+            "<yellow>/magnet filter change <whitelist|blacklist> <white>- сменить режим фильтра"
+    );
+
+    @SerializedName("filter-invalid-material")
+    Message filterInvalidMaterial = new Message("<dark_red>[PPFSS]<red>Материал не найден: <material>");
+
+    @SerializedName("filter-invalid-type")
+    Message filterInvalidType = new Message("<dark_red>[PPFSS]<red>Неверный тип фильтра: <type>");
+
+    @SerializedName("filter-enabled")
+    Message filterEnabled = new Message("<dark_green>[PPFSS]<green>Фильтр включен");
+
+    @SerializedName("filter-disabled")
+    Message filterDisabled = new Message("<dark_green>[PPFSS]<green>Фильтр выключен");
+
+    @SerializedName("filter-type-changed")
+    Message filterTypeChanged = new Message("<dark_green>[PPFSS]<green>Тип фильтра: <type>");
+
+    @SerializedName("filter-item-added")
+    Message filterItemAdded = new Message("<dark_green>[PPFSS]<green>Добавлено в фильтр: <material>");
+
+    @SerializedName("filter-item-removed")
+    Message filterItemRemoved = new Message("<dark_green>[PPFSS]<green>Удалено из фильтра: <material>");
+
+    @SerializedName("filter-item-exists")
+    Message filterItemExists = new Message("<dark_red>[PPFSS]<red>Уже в фильтре: <material>");
+
+    @SerializedName("filter-item-not-found")
+    Message filterItemNotFound = new Message("<dark_red>[PPFSS]<red>Этого предмета нет в фильтре: <material>");
+
+    @SerializedName("filter-status")
+    Message filterStatus = new Message(
+            "<gold>====== <yellow>Фильтр <gold>======",
+            "<gray>Состояние: <enabled>",
+            "<gray>Режим: <type>",
+            "<gray>Кол-во: <count>",
+            "<gray>Список:",
+            "<yellow>- <items>",
+            "<gold>======================"
+    );
 
     public static void load(YamlConfigLoader loader) {
         instance = loader.loadConfig("messages", MessageConfig.class);

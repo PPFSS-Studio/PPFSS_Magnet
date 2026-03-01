@@ -28,3 +28,13 @@ default-item:
     - "<light_purple>Лимит: <white><limit>"
     - "<white>"
     - "<gray>©PPFSS"
+
+
+# Настройки притяжения предметов
+filter-items:
+  enabled: false
+
+  type: blacklist # Тип списка блокировок: blacklist или whitelist
+  blocklist:
+    - stone
+    - dirt

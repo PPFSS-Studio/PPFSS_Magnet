@@ -9,6 +9,7 @@ import org.bukkit.Particle;
 
 import java.lang.reflect.Type;
 
+@GsonAdapter(Particle.class)
 public class ParticleAdapter implements JsonSerializer<Particle>, JsonDeserializer<Particle> {
     @Override
     public Particle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

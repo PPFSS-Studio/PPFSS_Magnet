@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 @Getter
 @Setter
 public abstract class SubCommand {
@@ -27,6 +28,12 @@ public abstract class SubCommand {
 
     public List<String> complete(CommandSender sender, String... args) {
         return Collections.emptyList();
+    }
+
+
+    public boolean hasPermission(CommandSender sender, Command command,String label, String... args) {
+        String permission = getPermission(sender, command, label, args);
+        return permission == null || permission.isEmpty() || sender.hasPermission(permission);
     }
 
     public void noPermission(CommandSender sender, Command command, String label, String... args) {

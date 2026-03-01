@@ -8,15 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import com.ppfss.libs.adapter.ComponentAdapter;
-import com.ppfss.libs.adapter.MaterialAdapter;
-import com.ppfss.libs.adapter.MessageAdapter;
-import com.ppfss.libs.adapter.ParticleAdapter;
-import com.ppfss.libs.message.Message;
+import com.ppfss.libs.adapter.GsonAdapterLoader;
 import com.ppfss.libs.utils.LogUtils;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -38,14 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class YamlConfigLoader {
-    private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
-            .registerTypeAdapter(Message.class, new MessageAdapter())
-            .registerTypeAdapter(Component.class, new ComponentAdapter())
-            .registerTypeAdapter(Material.class, new MaterialAdapter())
-            .registerTypeAdapter(Particle.class, new ParticleAdapter())
-            .create();
+    private final Gson gson;
     private final Yaml yaml;
     private final Plugin plugin;
     private final TypeToken<Map<String, Object>> mapToken = new TypeToken<>() {
@@ -55,6 +41,12 @@ public class YamlConfigLoader {
     public YamlConfigLoader(Plugin plugin) {
         this.plugin = plugin;
         plugin.getDataFolder().mkdirs();
+
+        GsonBuilder builder = new GsonBuilder()
+                .setPrettyPrinting()
+                .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC);
+        GsonAdapterLoader.registerAll(builder, "com.ppfss.libs.adapter");
+        this.gson = builder.create();
 
         DumperOptions options = new DumperOptions();
         options.setIndent(4);
@@ -96,19 +88,30 @@ public class YamlConfigLoader {
 
         String json = gson.toJson(data);
 
-        T instance = gson.fromJson(json, type);
+        T loaded = gson.fromJson(json, type);
 
-        instance.setFile(file);
-        instance.setConfigLoader(this);
+        loaded.setFile(file);
+        loaded.setConfigLoader(this);
 
-        boolean updated = applyDefaultsFromClass(instance, config);
+        boolean updated = applyDefaultsFromClass(loaded, config);
         if (updated) {
-            saveConfig(instance);
+            saveConfig(loaded);
             LogUtils.info("Updated config with new defaults: " + file.getName());
         }
 
-        cacheConfigs.put(name, instance);
-        return instance;
+        YamlConfig cached = cacheConfigs.get(name);
+        if (type.isInstance(cached)) {
+            @SuppressWarnings("unchecked")
+            T existing = (T) cached;
+            existing.applyFrom(loaded);
+            existing.setFile(loaded.getFile());
+            existing.setConfigLoader(this);
+            cacheConfigs.put(name, existing);
+            return existing;
+        }
+
+        cacheConfigs.put(name, loaded);
+        return loaded;
     }
 
     private boolean applyDefaultsFromClass(Object instance, YamlConfiguration config) {

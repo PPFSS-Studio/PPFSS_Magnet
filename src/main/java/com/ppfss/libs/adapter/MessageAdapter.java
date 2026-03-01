@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+@GsonAdapter(Message.class)
 public class MessageAdapter implements JsonSerializer<Message>, JsonDeserializer<Message> {
     @Override
     public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
